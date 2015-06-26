@@ -42,9 +42,10 @@ class nexus::package (
 
   $nexus_home      = "${nexus_root}/${nexus_home_dir}"
 
-  $full_version = "${version}-${revision}"
+  $ver_and_revision = delete(delete_undef_values($version, $revision), '')
+  $full_version = join($ver_and_revision, '-')
 
-  $nexus_archive   = "nexus-${version}-bundle.tar.gz"
+  $nexus_archive   = "nexus-${full_version}-bundle.tar.gz"
   $download_url    = "${download_site}/${nexus_archive}"
   $dl_file         = "${nexus_root}/${nexus_archive}"
   $nexus_home_real = "${nexus_root}/nexus-${full_version}"
