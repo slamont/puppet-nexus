@@ -62,7 +62,8 @@ class nexus (
 
   if($nexus_manage_user){
     group { $nexus_group :
-      ensure  => present
+      ensure  => present,
+      require => Anchor['nexus::begin'],
     }
 
     user { $nexus_user:
@@ -76,6 +77,14 @@ class nexus (
     }
   }
 
+  file { $nexus_root:
+    ensure  => directory,
+    owner   => $nexus_user,
+    group   => $nexus_group,
+    recurse => true,
+    require => Anchor['nexus::begin'],
+  }
+
   class{ 'nexus::package':
     version               => $version,
     revision              => $revision,
@@ -87,7 +96,7 @@ class nexus (
     nexus_work_dir        => $real_nexus_work_dir,
     nexus_work_dir_manage => $nexus_work_dir_manage,
     nexus_work_recurse    => $nexus_work_recurse,
-    require               => Anchor['nexus::begin'],
+    require               => File[$nexus_root],
     notify                => Class['nexus::service']
   }
 
