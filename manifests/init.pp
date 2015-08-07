@@ -81,7 +81,7 @@ class nexus (
     ensure  => directory,
     owner   => $nexus_user,
     group   => $nexus_group,
-    recurse => true,
+    # recurse => true, # takes way too long and leaks memory over the storage dir
     require => Anchor['nexus::begin'],
   }
 
